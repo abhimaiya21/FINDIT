@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FindIt - Lost & Found Portal</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4361ee;
+      --primary-light: #4895ef;
+      --secondary: #3f37c9;
+      --dark: #1b263b;
+      --light: #f8f9fa;
+      --success: #4cc9f0;
+      --warning: #f72585;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      animation: gradientBG 15s ease infinite;
+      background-size: 400% 400%;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .container {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      padding: 40px;
+      width: 100%;
+      max-width: 600px;
+      transform: translateY(-20px);
+      opacity: 0;
+      animation: fadeInUp 0.8s 0.3s forwards;
+      overflow: hidden;
+      position: relative;
+    }
+
+    @keyframes fadeInUp {
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 8px;
+      background: linear-gradient(90deg, var(--primary), var(--primary-light), var(--success));
+    }
+
+    h1 {
+      color: var(--dark);
+      text-align: center;
+      margin-bottom: 30px;
+      font-weight: 600;
+      font-size: 2.2rem;
+      position: relative;
+      padding-bottom: 15px;
+    }
+
+    h1::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: var(--primary);
+      border-radius: 2px;
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+      position: relative;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--dark);
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid #e9ecef;
+      border-radius: 8px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background-color: #f8f9fa;
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary-light);
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+      background-color: white;
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    button {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(to right, var(--primary), var(--primary-light));
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(67, 97, 238, 0.4);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    button i {
+      font-size: 1.2rem;
+    }
+
+    #message {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 0.95rem;
+      padding: 12px;
+      border-radius: 6px;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.3s ease;
+    }
+
+    .success {
+      background-color: rgba(76, 201, 240, 0.2);
+      color: #1a759f;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .error {
+      background-color: rgba(247, 37, 133, 0.2);
+      color: #9d174d;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* File input styling */
+    .file-input-wrapper {
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+      width: 100%;
+    }
+
+    .file-input-button {
+      border: 2px dashed #e9ecef;
+      border-radius: 8px;
+      padding: 40px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background-color: #f8f9fa;
+    }
+
+    .file-input-button:hover {
+      border-color: var(--primary-light);
+      background-color: rgba(67, 97, 238, 0.05);
+    }
+
+    .file-input-button i {
+      font-size: 2rem;
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+
+    .file-input-button span {
+      display: block;
+      margin-top: 5px;
+      color: var(--dark);
+      font-size: 0.9rem;
+    }
+
+    #image {
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+
+    .file-name {
+      margin-top: 8px;
+      font-size: 0.85rem;
+      color: #6c757d;
+      text-align: center;
+    }
+
+    /* Floating animation for the title icon */
+    h1 i {
+      display: inline-block;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .container {
+        padding: 30px 20px;
+      }
+      
+      h1 {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1><i class="fas fa-search"></i> FindIt - Lost & Found Portal</h1>
+
+    <form id="itemForm" enctype="multipart/form-data">
+      <div class="form-group">
+        <label for="title">Item Title</label>
+        <input type="text" id="title" name="title" placeholder="E.g. Black Wallet" required />
+      </div>
+
+      <div class="form-group">
+        <label for="location">Location Found/Lost</label>
+        <input type="text" id="location" name="location" placeholder="E.g. Library" required />
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" name="description" placeholder="Provide details like color, brand, etc." required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Upload Image</label>
+        <div class="file-input-wrapper">
+          <div class="file-input-button">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <span>Click to upload an image</span>
+            <input type="file" id="image" name="image" accept="image/*" required />
+          </div>
+        </div>
+        <div id="fileName" class="file-name"></div>
+      </div>
+
+      <button type="submit"><i class="fas fa-paper-plane"></i> Submit</button>
+    </form>
+
+    <p id="message"></p>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.getElementById('itemForm');
+      const messageEl = document.getElementById('message');
+      const fileInput = document.getElementById('image');
+      const fileNameEl = document.getElementById('fileName');
+
+      // Show selected file name
+      fileInput.addEventListener('change', function(e) {
+        if (fileInput.files.length > 0) {
+          fileNameEl.textContent = fileInput.files[0].name;
+        }
+      });
+
+      // Form submission with animation
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Simulate form submission (replace with actual AJAX call)
+        const submitBtn = form.querySelector('button');
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+        submitBtn.disabled = true;
+        
+        setTimeout(function() {
+          // Show success message
+          messageEl.textContent = 'Item submitted successfully! Our team will review it shortly.';
+          messageEl.className = 'success';
+          
+          // Reset form
+          submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit';
+          submitBtn.disabled = false;
+          form.reset();
+          fileNameEl.textContent = '';
+          
+          // Hide message after 5 seconds
+          setTimeout(function() {
+            messageEl.className = '';
+          }, 5000);
+        }, 2000);
+      });
+
+      // Add input focus animations
+      const inputs = document.querySelectorAll('input, textarea');
+      inputs.forEach(input => {
+        input.addEventListener('focus', function() {
+          this.parentElement.style.transform = 'translateY(-2px)';
+        });
+        
+        input.addEventListener('blur', function() {
+          this.parentElement.style.transform = 'translateY(0)';
+        });
+      });
+    });
+  </script>
+</body>
+</html>
